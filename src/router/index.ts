@@ -15,7 +15,7 @@ export const constantRoutes: Array<any> = [
       {
         path: 'home',
         name: 'Home',
-        component: () => import('@/views/test/index.vue'),
+        component: () => import('@/views/home/index.vue'),
         meta: {
           title: 'Home'
         }

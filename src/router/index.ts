@@ -1,0 +1,33 @@
+import { createRouter, createWebHashHistory } from 'vue-router'
+
+import Layout from '@/layout/index.vue'
+
+// path和name尽量不要重名，即使在不同的模块中
+export const constantRoutes: Array<any> = [
+  {
+    path: '/',
+    component: Layout,
+    redirect: '/home',
+    hidden: true,
+    // children子路由需要在父路由中占位才能显示
+    // 即 <router-view />
+    children: [
+      {
+        path: 'home',
+        name: 'Home',
+        component: () => import('@/views/test/index.vue'),
+        meta: {
+          title: 'Home'
+        }
+      }
+    ]
+  },
+]
+
+const router = createRouter({
+  history: createWebHashHistory(),
+  scrollBehavior: () => ({ top: 0 }),
+  routes: constantRoutes
+})
+
+export default router

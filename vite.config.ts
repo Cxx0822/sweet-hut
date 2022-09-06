@@ -1,0 +1,18 @@
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+
+// 需要安装 npm install @types/node --save-dev
+import path from 'path'
+
+export default defineConfig({
+  plugins: [vue()],
+  define: {
+    'process.env': {},
+  },
+  resolve: {
+    // 配置路径别名
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
+});

@@ -22,6 +22,38 @@ export const constantRoutes: Array<any> = [
       }
     ]
   },
+  {
+    path: '/cookery-book',
+    component: Layout,
+    redirect: '/cookery-book/list',
+    hidden: true,
+    children: [
+      {
+        path: '/cookery-book/list',
+        name: 'CookeryBookList',
+        component: () => import('@/views/cookery-book/index.vue'),
+        meta: {
+          title: 'CookeryBookList'
+        }
+      }
+    ]
+  },
+  {
+    path: '/travel',
+    component: Layout,
+    redirect: '/travel/list',
+    hidden: true,
+    children: [
+      {
+        path: '/travel/list',
+        name: 'TravelList',
+        component: () => import('@/views/travel/index.vue'),
+        meta: {
+          title: 'TravelList'
+        }
+      }
+    ]
+  }
 ]
 
 const router = createRouter({

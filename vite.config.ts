@@ -7,12 +7,13 @@ import path from 'path'
 export default defineConfig({
   plugins: [vue()],
   define: {
-    'process.env': {},
+    'process.env': {}
   },
+  base: './',
   resolve: {
     // 配置路径别名
     alias: {
-      '@': path.resolve(__dirname, './src'),
-    },
-  },
-});
+      '@': path.resolve(__dirname, './src')
+    }
+  }
+})

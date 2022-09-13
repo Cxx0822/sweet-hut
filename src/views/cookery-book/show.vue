@@ -33,14 +33,14 @@ const tableData = [
     type: '川菜',
     first_done: '2022-09-09',
     creator: '哥哥',
-    image: 'src/assets/cookery/fish.png'
+    image: new URL('../../assets/cookery/fish.png', import.meta.url).href
   },
   {
     name: '紫菜蛋汤',
     type: '川菜',
     first_done: '2022-09-09',
     creator: '宝宝',
-    image: 'src/assets/cookery/紫菜蛋汤.png'
+    image: new URL('../../assets/cookery/zicaidantang.png', import.meta.url).href
   }
 ]
 

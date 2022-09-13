@@ -8,7 +8,7 @@
 
       <!-- 主体区域 -->
       <el-container>
-        <el-aside width="200px">
+        <el-aside width="250px">
           <Aside />
         </el-aside>
 

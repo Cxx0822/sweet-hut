@@ -7,20 +7,20 @@
         :cell-style="{ fontSize:'16px' }"
         border
         stripe
-        style="width: 1350px">
+        style="width: 100%">
         <el-table-column type="index" align="center" width="50" />
         <el-table-column prop="name" label="菜谱名称" align="center" width="180"/>
-        <el-table-column prop="type" label="菜系名称" align="center" width="180" />
-        <el-table-column prop="first_date" label="首次完成时间" align="center" width="180" />
-        <el-table-column prop="creator" label="完成人" align="center" width="180" />
+        <el-table-column prop="type" label="菜系" align="center" width="100" />
+        <el-table-column prop="first_date" label="完成时间" align="center" width="150" />
+        <el-table-column prop="creator" label="完成人" align="center" width="100" />
         <el-table-column label="成品展示" align="center" width="180">
           <template #default="scope">
             <img :src="scope.row.image" width="90" height="90">
           </template>
         </el-table-column>
-        <el-table-column align="center" width="400">
+        <el-table-column align="center">
           <template #header>
-            <el-input style="width: 150px; margin-right: 10px" placeholder="搜索菜谱" />
+            <!-- <el-input style="width: 100px; margin-right: 10px" placeholder="搜索菜谱" /> -->
             <button class="add-cookery-book-button">新增菜谱</button>
           </template>
           <template #default="scope">
@@ -33,7 +33,7 @@
                   </svg>
                 </div>
               </div>
-              <span>详细信息</span>
+              <span>更多</span>
             </button>
           </template>
         </el-table-column>
@@ -53,14 +53,14 @@ const tableData = [
     type: '川菜',
     first_date: '2022-09-09',
     creator: '哥哥',
-    image: 'src/assets/cookery/fish.png'
+    image: new URL('../../assets/cookery/fish.png', import.meta.url).href
   },
   {
     name: '紫菜蛋汤',
     type: '川菜',
     first_date: '2022-09-09',
     creator: '宝宝',
-    image: 'src/assets/cookery/紫菜蛋汤.png'
+    image: new URL('../../assets/cookery/zicaidantang.png', import.meta.url).href
   }
 ]
 
@@ -72,9 +72,6 @@ const viewDetails = (row:any) => {
 <style lang="scss">
 .cookery-book-list {
   .el-card {
-    display:flex;
-    justify-content: center;
-
     min-height: 700px;
 
     cursor: pointer;

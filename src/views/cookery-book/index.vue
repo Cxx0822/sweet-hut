@@ -8,17 +8,18 @@
         border
         stripe
         style="width: 100%">
-        <el-table-column type="index" align="center" width="50" />
-        <el-table-column prop="name" label="菜谱名称" align="center" width="180"/>
-        <el-table-column prop="type" label="菜系" align="center" width="100" />
-        <el-table-column prop="first_date" label="完成时间" align="center" width="150" />
-        <el-table-column prop="creator" label="完成人" align="center" width="100" />
-        <el-table-column label="成品展示" align="center" width="180">
+        <!-- min-width可以百分比设置 -->
+        <el-table-column type="index" align="center" min-width="5%"/>
+        <el-table-column prop="name" label="菜谱名称" align="center" min-width="15%"/>
+        <el-table-column prop="type" label="菜系" align="center" min-width="10%" />
+        <el-table-column prop="first_date" label="完成时间" align="center" min-width="15%" />
+        <el-table-column prop="creator" label="完成人" align="center" min-width="15%" />
+        <el-table-column label="成品展示" align="center" min-width="20%">
           <template #default="scope">
             <img :src="scope.row.image" width="90" height="90">
           </template>
         </el-table-column>
-        <el-table-column align="center">
+        <el-table-column align="center" min-width="20%">
           <template #header>
             <!-- <el-input style="width: 100px; margin-right: 10px" placeholder="搜索菜谱" /> -->
             <button class="add-cookery-book-button">新增菜谱</button>

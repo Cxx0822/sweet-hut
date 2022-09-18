@@ -185,15 +185,6 @@ const backToIndex = () => {
 <style lang="scss">
 .cookery-book-detail {
   .el-card {
-    min-height: 700px;
-
-    cursor: pointer;
-    background: rgb(255, 255, 255);
-    border-radius: 5px;
-    border: 1px solid rgba(0, 0, 255, .2);
-    transition: all .2s;
-    box-shadow: 12px 12px 2px 1px rgba(0, 0, 255, .2);
-
     .el-row {
       margin-bottom: 20px;
     }

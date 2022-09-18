@@ -67,6 +67,14 @@ export const constantRoutes: Array<any> = [
         meta: {
           title: 'TravelList'
         }
+      },
+      {
+        path: '/travel/plan',
+        name: 'TravelPlan',
+        component: () => import('@/views/travel/plan.vue'),
+        meta: {
+          title: 'TravelPlan'
+        }
       }
     ]
   }

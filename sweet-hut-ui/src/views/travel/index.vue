@@ -8,7 +8,7 @@
       />
 
       <el-tooltip effect="dark" content="新增游玩景点" placement="bottom">
-        <el-button :icon="CirclePlus" circle></el-button>
+        <el-button :icon="CirclePlus" circle @click="addTravelJournalClick"></el-button>
       </el-tooltip>
 
       <el-tooltip effect="dark" content="未来旅游计划" placement="bottom">
@@ -44,21 +44,21 @@
           <el-descriptions-item align="center">
             <template #label>
               <div class="cell-item">
-                <el-icon><location /></el-icon>
-                地区
-              </div>
-            </template>
-            {{ journal.area }}
-          </el-descriptions-item>
-
-          <el-descriptions-item align="center">
-            <template #label>
-              <div class="cell-item">
                 <el-icon><user /></el-icon>
                 人员
               </div>
             </template>
             {{ journal.person }}
+          </el-descriptions-item>
+
+          <el-descriptions-item align="center">
+            <template #label>
+              <div class="cell-item">
+                <el-icon><Location /></el-icon>
+                地区
+              </div>
+            </template>
+            {{ journal.area }}
           </el-descriptions-item>
 
           <el-descriptions-item align="center">
@@ -112,15 +112,106 @@
         </span>
       </template>
     </el-dialog>
+
+    <el-dialog
+        v-model="travelJournalInfo.addTravelJournalDialogVisible"
+        title="新增旅游景点"
+        draggable center>
+      <el-form ref="addTravelJournalFormRef" :model="travelJournalInfo.addTravelJournal" :rules="addTravelJournalRules">
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="标题" prop="title">
+              <el-input v-model="travelJournalInfo.addTravelJournal.title" clearable/>
+            </el-form-item>
+
+            <el-form-item label="日期" prop="date">
+              <el-date-picker
+                  v-model="travelJournalInfo.addTravelJournal.date"
+                  type="date"
+                  placeholder="选择日期"
+              />
+            </el-form-item>
+
+            <el-form-item label="地点" prop="area">
+              <el-cascader
+                  v-model="travelJournalInfo.addTravelJournal.area"
+                  placeholder="选择地点"
+                  clearable
+                  :options="pcTextArr">
+              </el-cascader>
+            </el-form-item>
+
+            <el-form-item label="人员" prop="person">
+              <el-checkbox-group v-model="travelJournalInfo.addTravelJournal.person">
+                <el-checkbox label="哥哥" />
+                <el-checkbox label="宝宝" />
+              </el-checkbox-group>
+            </el-form-item>
+
+            <el-form-item label="景点" prop="place">
+              <el-input v-model="travelJournalInfo.addTravelJournal.place" clearable/>
+            </el-form-item>
+
+            <el-form-item label="日志" prop="content">
+              <el-input
+                  v-model="travelJournalInfo.addTravelJournal.content"
+                  maxlength="1000"
+                  placeholder="旅游日志"
+                  show-word-limit
+                  type="textarea"
+                  :autosize="{ minRows: 10, maxRows: 10 }"
+              />
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="12">
+            <el-form-item label="照片" prop="imageList">
+              <el-upload
+                  :file-list="travelJournalInfo.addTravelJournal.imageList"
+                  list-type="picture-card"
+                  :auto-upload="false"
+                  :on-change="handleChange"
+                  :on-remove="handleRemove">
+                <el-icon><Plus /></el-icon>
+              </el-upload>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <template #footer>
+      <span class="dialog-footer">
+        <el-button type="primary" @click="submitTravelJournalClick(addTravelJournalFormRef)">新增</el-button>
+        <el-button @click="travelJournalInfo.addTravelJournalDialogVisible = false">取消</el-button>
+      </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, computed } from 'vue'
-import { ElButton, ElDialog } from 'element-plus'
+import { ref, reactive } from 'vue'
+import { ElButton, ElDialog, ElMessage, FormInstance, FormRules, UploadFile, UploadFiles } from 'element-plus'
 import { useRouter } from 'vue-router'
-import { Calendar, CirclePlus, Checked, Location, Histogram, OfficeBuilding, User } from '@element-plus/icons-vue'
+import { Calendar, CirclePlus, Checked, Location, Histogram, OfficeBuilding, User, Plus } from '@element-plus/icons-vue'
+import { pcTextArr } from 'element-china-area-data'
+
 const router = useRouter()
+
+interface addTravelJournalIF {
+  title: string;
+  date: string;
+  area: string[];
+  person: string[];
+  place: string;
+  imageList: UploadFiles;
+  content: string;
+}
+
+const addTravelJournalFormRef = ref<FormInstance>()
+
+const emptyAddTravelJournal: addTravelJournalIF = {
+  area: [], content: '', date: '', imageList: [], person: [], place: '', title: ''
+}
 
 const travelJournalInfo = reactive({
   selectYear: '',
@@ -128,36 +219,43 @@ const travelJournalInfo = reactive({
     title: '夜游无想水镇',
     date: '2023-07-09',
     area: '江苏省-南京市',
-    person: '哥哥和宝宝',
+    person: '哥哥,宝宝',
     place: '无想水镇',
     content: ''
   }, {
     title: '镇江一日游',
     date: '2023-07-10',
     area: '江苏省-镇江市',
-    person: '哥哥和宝宝',
-    place: '镇江一日游',
+    person: '哥哥,宝宝',
+    place: '北固山,焦山',
     content: '吃了锅盖面'
-  }
-  ]
+  }],
+  addTravelJournalDialogVisible: false,
+  addTravelJournal: emptyAddTravelJournal
 })
 
-const travelJournals = reactive([
-  {
-    date: '2020-09-17',
-    region: '江苏南京溧水',
-    name: '天生桥',
-    thought: '风景不错',
-    photo: new URL('../../assets/travel/wuxiangshuizhen.png', import.meta.url).href
-  },
-  {
-    date: '2020-09-17',
-    region: '江苏南京溧水',
-    name: '无想水镇',
-    thought: '夜景很美',
-    photo: new URL('../../assets/travel/wuxiangshuizhen.png', import.meta.url).href
-  }
-])
+const addTravelJournalRules = reactive<FormRules<addTravelJournalIF>>({
+  title: [
+    { required: true, message: '请输入标题', trigger: 'blur' }
+  ],
+  date: [
+    { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
+  ],
+  area: [
+    { type: 'array', required: true, message: '请选择地点', trigger: 'change' }
+  ],
+  person: [
+    { type: 'array', required: true, message: '请选择人员', trigger: 'change' }
+  ],
+  place: [
+    { required: true, message: '请输入景点', trigger: 'blur' }
+  ],
+  imageList: [
+    { type: 'array', required: true, message: '请上传照片', trigger: 'change' }
+  ],
+  content: [
+  ]
+})
 
 const yearCardTouristSpots = {
   XuanWu: ['明孝陵景区', '灵谷景区', '毗卢寺景区', '南京城墙景区台城段（不含夜游）', '白马石刻公园',
@@ -189,6 +287,44 @@ const yearCardTouristSpotsCheck = reactive({
 })
 
 const yearCardDialogVisible = ref(false)
+
+const addTravelJournalClick = () => {
+  travelJournalInfo.addTravelJournal = emptyAddTravelJournal
+  travelJournalInfo.addTravelJournalDialogVisible = true
+}
+
+// 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用,function(file, fileList)
+const handleChange = (file: UploadFile, fileList: UploadFiles) => {
+  travelJournalInfo.addTravelJournal.imageList = fileList
+}
+
+// 删除文件之前的钩子，参数为上传的文件和文件列表，若返回 false 或者返回 Promise 且被 reject，则停止删除。function(file, fileList)
+const handleRemove = (file: UploadFile, fileList: UploadFiles) => {
+  travelJournalInfo.addTravelJournal.imageList = fileList
+}
+
+const submitTravelJournalClick = async (formEl: FormInstance | undefined) => {
+  if (!formEl) return
+  await formEl.validate((valid, fields) => {
+    if (valid) {
+      console.log(travelJournalInfo.addTravelJournal)
+      const formData = new FormData()
+      formData.append('title', travelJournalInfo.addTravelJournal.title)
+      formData.append('date', travelJournalInfo.addTravelJournal.date)
+      formData.append('area', travelJournalInfo.addTravelJournal.area.join('-'))
+      formData.append('person', travelJournalInfo.addTravelJournal.person.join(','))
+      formData.append('place', travelJournalInfo.addTravelJournal.place)
+      travelJournalInfo.addTravelJournal.imageList.forEach((file) => {
+        formData.append('imageList', file.raw as Blob)
+      })
+      formData.append('content', travelJournalInfo.addTravelJournal.content)
+
+      travelJournalInfo.addTravelJournal.imageList = []
+    } else {
+      ElMessage.error('请先正确填写数据')
+    }
+  })
+}
 
 const viewPlan = () => {
   router.push('/travel/plan')

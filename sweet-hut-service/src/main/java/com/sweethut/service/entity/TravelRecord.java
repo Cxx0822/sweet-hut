@@ -40,6 +40,9 @@ public class TravelRecord implements Serializable {
     @TableField("content")
     private String content;
 
+    @TableField("image")
+    private String image;
+
     @TableField("date")
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date date;

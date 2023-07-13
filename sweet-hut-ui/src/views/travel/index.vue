@@ -2,13 +2,13 @@
   <div class="travel-journal-container">
     <div class="title-container">
       <el-date-picker
-          v-model="travelJournalInfo.selectYear"
+          v-model="travelRecordInfo.selectYear"
           type="year"
           placeholder="选择某一年"
       />
 
       <el-tooltip effect="dark" content="新增游玩景点" placement="bottom">
-        <el-button :icon="CirclePlus" circle @click="addTravelJournalClick"></el-button>
+        <el-button :icon="CirclePlus" circle @click="addTravelRecordClick"></el-button>
       </el-tooltip>
 
       <el-tooltip effect="dark" content="未来旅游计划" placement="bottom">
@@ -18,12 +18,11 @@
       <el-tooltip effect="dark" content="旅游景点统计" placement="bottom">
         <el-button :icon="Histogram" circle></el-button>
       </el-tooltip>
-
     </div>
 
     <div class="travel-item-container" >
-      <el-card shadow="always" v-for="(journal, index) in travelJournalInfo.journalList" :key="index">
-        <h3 style="text-align: center;margin: 0px">{{ journal.title }}</h3>
+      <el-card shadow="always" v-for="(journal, index) in travelRecordInfo.journalList" :key="index">
+        <h3 style="text-align: center;margin: 0">{{ journal.title }}</h3>
 
         <el-descriptions
             class="margin-top"
@@ -73,8 +72,11 @@
         </el-descriptions>
 
         <el-carousel :interval="4000" type="card" height="200px" style="width: 100%">
-          <el-carousel-item v-for="item in 6" :key="item">
-            <h3 text="2xl" justify="center">{{ item }}</h3>
+          <el-carousel-item v-for="(item, index) in journal.image.split('*')" :key="index">
+            <img :src="travelRecordInfo.imageBaseSrc +
+                      journal.date + '/' + journal.place + '/' + item"
+                  style="width: 100%; height: 100%"
+                  alt="空"/>
           </el-carousel-item>
         </el-carousel>
 
@@ -90,43 +92,25 @@
       </el-card>
     </div>
 
-    <el-pagination layout="prev, pager, next" :total="1000" />
-
-    <el-dialog v-model="yearCardDialogVisible" title="2022年 年卡使用情况" center style="width: 880px" :show-close="false">
-      <div>
-        <el-tabs type="border-card" tab-position="top" style="width: 830px" class="demo-tabs">
-          <el-tab-pane
-              v-for="(touristSpots, key, index) in yearCardTouristSpots"
-              :key="index"
-              :label=key>
-            <el-checkbox
-                v-for="(touristSpot, index) in touristSpots"
-                :key="index"
-                v-model="yearCardTouristSpotsCheck[key][index]" :label="touristSpot" size="large" :check="yearCardTouristSpotsCheck[key][index]"/>
-          </el-tab-pane>
-        </el-tabs>
-      </div>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button type="primary" @click="yearCardDialogVisible = false">返回</el-button>
-        </span>
-      </template>
-    </el-dialog>
+    <el-pagination layout="prev, pager, next"
+                   :default-page-size="travelRecordInfo.pageSize"
+                   :total="travelRecordInfo.totalPages"
+                   @current-change="currentPageChange" />
 
     <el-dialog
-        v-model="travelJournalInfo.addTravelJournalDialogVisible"
+        v-model="travelRecordInfo.addTravelRecordDialogVisible"
         title="新增旅游景点"
         draggable center>
-      <el-form ref="addTravelJournalFormRef" :model="travelJournalInfo.addTravelJournal" :rules="addTravelJournalRules">
+      <el-form ref="addTravelRecordFormRef" :model="travelRecordInfo.addTravelRecord" :rules="addTravelRecordRules">
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="标题" prop="title">
-              <el-input v-model="travelJournalInfo.addTravelJournal.title" clearable/>
+              <el-input v-model="travelRecordInfo.addTravelRecord.title" clearable/>
             </el-form-item>
 
             <el-form-item label="日期" prop="date">
               <el-date-picker
-                  v-model="travelJournalInfo.addTravelJournal.date"
+                  v-model="travelRecordInfo.addTravelRecord.date"
                   type="date"
                   placeholder="选择日期"
               />
@@ -134,7 +118,7 @@
 
             <el-form-item label="地点" prop="area">
               <el-cascader
-                  v-model="travelJournalInfo.addTravelJournal.area"
+                  v-model="travelRecordInfo.addTravelRecord.area"
                   placeholder="选择地点"
                   clearable
                   :options="pcTextArr">
@@ -142,19 +126,19 @@
             </el-form-item>
 
             <el-form-item label="人员" prop="person">
-              <el-checkbox-group v-model="travelJournalInfo.addTravelJournal.person">
+              <el-checkbox-group v-model="travelRecordInfo.addTravelRecord.person">
                 <el-checkbox label="哥哥" />
                 <el-checkbox label="宝宝" />
               </el-checkbox-group>
             </el-form-item>
 
             <el-form-item label="景点" prop="place">
-              <el-input v-model="travelJournalInfo.addTravelJournal.place" clearable/>
+              <el-input v-model="travelRecordInfo.addTravelRecord.place" clearable/>
             </el-form-item>
 
             <el-form-item label="日志" prop="content">
               <el-input
-                  v-model="travelJournalInfo.addTravelJournal.content"
+                  v-model="travelRecordInfo.addTravelRecord.content"
                   maxlength="1000"
                   placeholder="旅游日志"
                   show-word-limit
@@ -167,11 +151,13 @@
           <el-col :span="12">
             <el-form-item label="照片" prop="imageList">
               <el-upload
-                  :file-list="travelJournalInfo.addTravelJournal.imageList"
+                  :file-list="travelRecordInfo.addTravelRecord.imageList"
                   list-type="picture-card"
+                  accept=".png,.jpg"
                   :auto-upload="false"
                   :on-change="handleChange"
-                  :on-remove="handleRemove">
+                  :on-remove="handleRemove"
+                  :class="{'upload-image': travelRecordInfo.isShowAddImageButton }">
                 <el-icon><Plus /></el-icon>
               </el-upload>
             </el-form-item>
@@ -180,8 +166,8 @@
       </el-form>
       <template #footer>
       <span class="dialog-footer">
-        <el-button type="primary" @click="submitTravelJournalClick(addTravelJournalFormRef)">新增</el-button>
-        <el-button @click="travelJournalInfo.addTravelJournalDialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="submitTravelRecordClick(addTravelRecordFormRef)">新增</el-button>
+        <el-button @click="travelRecordInfo.addTravelRecordDialogVisible = false">取消</el-button>
       </span>
       </template>
     </el-dialog>
@@ -189,15 +175,17 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import { ElButton, ElDialog, ElMessage, FormInstance, FormRules, UploadFile, UploadFiles } from 'element-plus'
 import { useRouter } from 'vue-router'
-import { Calendar, CirclePlus, Checked, Location, Histogram, OfficeBuilding, User, Plus } from '@element-plus/icons-vue'
+import { Calendar, Checked, CirclePlus, Histogram, Location, OfficeBuilding, Plus, User } from '@element-plus/icons-vue'
 import { pcTextArr } from 'element-china-area-data'
+import { addTravelRecord, addTravelRecordImage, getAllTravelRecordByPage } from '@/api/travelRecord'
+import { formattedDate } from '@/utils/dateUtil'
 
 const router = useRouter()
 
-interface addTravelJournalIF {
+interface addTravelRecordIF {
   title: string;
   date: string;
   area: string[];
@@ -207,34 +195,24 @@ interface addTravelJournalIF {
   content: string;
 }
 
-const addTravelJournalFormRef = ref<FormInstance>()
+const addTravelRecordFormRef = ref<FormInstance>()
 
-const emptyAddTravelJournal: addTravelJournalIF = {
+const emptyAddTravelRecord: addTravelRecordIF = {
   area: [], content: '', date: '', imageList: [], person: [], place: '', title: ''
 }
 
-const travelJournalInfo = reactive({
+const travelRecordInfo = reactive({
   selectYear: '',
-  journalList: [{
-    title: '夜游无想水镇',
-    date: '2023-07-09',
-    area: '江苏省-南京市',
-    person: '哥哥,宝宝',
-    place: '无想水镇',
-    content: ''
-  }, {
-    title: '镇江一日游',
-    date: '2023-07-10',
-    area: '江苏省-镇江市',
-    person: '哥哥,宝宝',
-    place: '北固山,焦山',
-    content: '吃了锅盖面'
-  }],
-  addTravelJournalDialogVisible: false,
-  addTravelJournal: emptyAddTravelJournal
+  journalList: [],
+  imageBaseSrc: 'http://192.168.5.80:8080/downloads/travelJournal/',
+  addTravelRecordDialogVisible: false,
+  addTravelRecord: emptyAddTravelRecord,
+  isShowAddImageButton: false,
+  pageSize: 10,
+  totalPages: 1
 })
 
-const addTravelJournalRules = reactive<FormRules<addTravelJournalIF>>({
+const addTravelRecordRules = reactive<FormRules<addTravelRecordIF>>({
   title: [
     { required: true, message: '请输入标题', trigger: 'blur' }
   ],
@@ -257,69 +235,86 @@ const addTravelJournalRules = reactive<FormRules<addTravelJournalIF>>({
   ]
 })
 
-const yearCardTouristSpots = {
-  XuanWu: ['明孝陵景区', '灵谷景区', '毗卢寺景区', '南京城墙景区台城段（不含夜游）', '白马石刻公园',
-    '中山植物园（含南园）', '总统府', '紫金山天文台', '音乐台', '美龄宫', '六朝博物馆', '红山森林动物园', '江宁织造博物馆'],
-  GuLou: ['宝船厂遗址公园', '龚贤纪念馆（清凉山内）', '魏紫熙艺术馆（清凉山内）',
-    '李剑晨艺术馆（清凉山内）', '国防教育馆', '阅江楼景区'],
-  QinHuai: ['南京王谢故居（夫子庙内）', '李香君故居（夫子庙内）', '大报恩寺（不含夜游）',
-    '市民俗博物馆（甘熙宅第）', '南京城墙景区〔中华门段）', '秦大士故居', '芥子园（芥子园+惜抱轩)', '瞻园（太平天国历史博物馆）（不含夜游）', '南京市博物馆（朝天宫）'],
-  GaoChun: ['固城湖水慢城（高淳区）'],
-  PuKou: ['云幽谷旅游区（浦口区）', '万成生态园（浦口区）', '珍珠泉名石艺术馆', '珍珠泉旅游度假区（含狮虎园）', '南京老山国家森林公园'],
-  LiuHe: ['金牛湖风景区'],
-  JiangNing: ['江宁汤山方山国家地质公园博物馆', '汤山古猿人洞', '明文化村（阳山碑材）'],
-  LiShui: ['大金山风景区', '天生桥风景区', '周园（不含周村）', '郭兴庄园', '无想山景区'],
-  QiXia: ['达摩古洞景区', '长江观音景区', '燕子矶公园'],
-  JianYe: ['莫愁湖公园']
-}
-
-const yearCardTouristSpotsCheck = reactive({
-  XuanWu: Array(yearCardTouristSpots.XuanWu.length).fill(false),
-  GuLou: Array(yearCardTouristSpots.GuLou.length).fill(false),
-  QinHuai: Array(yearCardTouristSpots.QinHuai.length).fill(false),
-  GaoChun: Array(yearCardTouristSpots.GaoChun.length).fill(false),
-  PuKou: Array(yearCardTouristSpots.PuKou.length).fill(false),
-  LiuHe: Array(yearCardTouristSpots.LiuHe.length).fill(false),
-  JiangNing: Array(yearCardTouristSpots.JiangNing.length).fill(false),
-  LiShui: Array(yearCardTouristSpots.LiShui.length).fill(false),
-  QiXia: Array(yearCardTouristSpots.QiXia.length).fill(false),
-  JianYe: Array(yearCardTouristSpots.JianYe.length).fill(false)
+onMounted(() => {
+  currentPageChange(1)
 })
 
-const yearCardDialogVisible = ref(false)
+/**
+ * 获取旅游记录
+ */
+const currentPageChange = async (value: number) => {
+  const { data } = await getAllTravelRecordByPage(value, travelRecordInfo.pageSize)
+  travelRecordInfo.journalList = data.travelRecordList.records
+  travelRecordInfo.totalPages = data.travelRecordList.total
+}
 
-const addTravelJournalClick = () => {
-  travelJournalInfo.addTravelJournal = emptyAddTravelJournal
-  travelJournalInfo.addTravelJournalDialogVisible = true
+/**
+ * 点击新增旅游记录
+ */
+const addTravelRecordClick = () => {
+  travelRecordInfo.addTravelRecord = emptyAddTravelRecord
+  addTravelRecordFormRef.value?.resetFields()
+  travelRecordInfo.addTravelRecordDialogVisible = true
 }
 
 // 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用,function(file, fileList)
 const handleChange = (file: UploadFile, fileList: UploadFiles) => {
-  travelJournalInfo.addTravelJournal.imageList = fileList
+  if (file.raw?.size / 1024 / 1024 > 10) {
+    ElMessage.error('图片大小不能超过10MB')
+    return
+  }
+
+  // 最多上传6张照片
+  travelRecordInfo.addTravelRecord.imageList = fileList
+  travelRecordInfo.isShowAddImageButton = fileList.length === 6
 }
 
 // 删除文件之前的钩子，参数为上传的文件和文件列表，若返回 false 或者返回 Promise 且被 reject，则停止删除。function(file, fileList)
 const handleRemove = (file: UploadFile, fileList: UploadFiles) => {
-  travelJournalInfo.addTravelJournal.imageList = fileList
+  travelRecordInfo.addTravelRecord.imageList = fileList
+  travelRecordInfo.isShowAddImageButton = fileList.length === 6
 }
 
-const submitTravelJournalClick = async (formEl: FormInstance | undefined) => {
+/**
+ * 提交新增旅游景点表单
+ * @param formEl 表单
+ */
+const submitTravelRecordClick = async (formEl: FormInstance | undefined) => {
   if (!formEl) return
-  await formEl.validate((valid, fields) => {
+  await formEl.validate(async (valid, fields) => {
     if (valid) {
-      console.log(travelJournalInfo.addTravelJournal)
-      const formData = new FormData()
-      formData.append('title', travelJournalInfo.addTravelJournal.title)
-      formData.append('date', travelJournalInfo.addTravelJournal.date)
-      formData.append('area', travelJournalInfo.addTravelJournal.area.join('-'))
-      formData.append('person', travelJournalInfo.addTravelJournal.person.join(','))
-      formData.append('place', travelJournalInfo.addTravelJournal.place)
-      travelJournalInfo.addTravelJournal.imageList.forEach((file) => {
-        formData.append('imageList', file.raw as Blob)
+      // 图片列表
+      const imageList = new FormData()
+      let imageName = ''
+      travelRecordInfo.addTravelRecord.imageList.forEach((file) => {
+        imageList.append('imageList', file.raw as Blob)
+        imageName += `${file.name}*`
       })
-      formData.append('content', travelJournalInfo.addTravelJournal.content)
 
-      travelJournalInfo.addTravelJournal.imageList = []
+      // 旅游记录
+      const travelRecord = {
+        title: travelRecordInfo.addTravelRecord.title,
+        date: formattedDate(travelRecordInfo.addTravelRecord.date as Date),
+        area: travelRecordInfo.addTravelRecord.area.join('-'),
+        person: travelRecordInfo.addTravelRecord.person.join(','),
+        place: travelRecordInfo.addTravelRecord.place,
+        content: travelRecordInfo.addTravelRecord.content,
+        image: imageName.slice(0, -1)
+      }
+
+      travelRecordInfo.addTravelRecord.imageList = []
+
+      const addTravelRecordResult = await addTravelRecord(travelRecord)
+      const addTravelRecordImageResult = await addTravelRecordImage(imageList,
+        travelRecord.date, travelRecord.place)
+
+      if (addTravelRecordResult.success && addTravelRecordImageResult.success) {
+        travelRecordInfo.addTravelRecordDialogVisible = false
+        await currentPageChange(1)
+        ElMessage.success('新增旅游景点成功')
+      } else {
+        ElMessage.error('新增旅游景点失败')
+      }
     } else {
       ElMessage.error('请先正确填写数据')
     }
@@ -378,6 +373,12 @@ const viewPlan = () => {
 
     .el-carousel__item:nth-child(2n + 1) {
       background-color: #d3dce6;
+    }
+  }
+
+  .upload-image {
+    .el-upload--picture-card {
+      display: none;
     }
   }
 }

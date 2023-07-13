@@ -10,6 +10,7 @@
         <result column="person" property="person"/>
         <result column="place" property="place"/>
         <result column="content" property="content"/>
+        <result column="image" property="image"/>
         <result column="date" property="date"/>
     </resultMap>
 </mapper>

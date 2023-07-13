@@ -11,6 +11,9 @@ import 'element-plus/dist/index.css'
 import 'dayjs/locale/zh-cn' // 中文
 import locale from 'element-plus/lib/locale/lang/zh-cn' // 中文
 
+// 引入icon-park
+import '@icon-park/vue-next/styles/index.css'
+
 // 创建Vue3实例
 const app = createApp(App)
 // 使用路由

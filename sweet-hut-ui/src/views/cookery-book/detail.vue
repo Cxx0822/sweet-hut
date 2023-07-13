@@ -108,7 +108,7 @@ const materialInfo = reactive({
   number: 0,
   company: '',
   materials: '',
-  materialList: [] as Array<String>,
+  materialList: [] as String[],
   companyOptions: [
     {
       value: '克',
@@ -129,7 +129,7 @@ const plusMaterial = () => {
     ElMessage.error('请输入正确的材料！')
   } else {
     const index = materialInfo.materialList.length + 1
-    materialInfo.newMaterial = index + '. ' + materialInfo.name + ': ' + materialInfo.number + materialInfo.company
+    materialInfo.newMaterial = `${index}. ${materialInfo.name}: ${materialInfo.number}${materialInfo.company}`
     materialInfo.materialList.push(materialInfo.newMaterial)
 
     materialInfo.name = ''
@@ -148,7 +148,7 @@ const minusMaterial = () => {
 const updateMaterial = () => {
   materialInfo.materials = ''
   for (let i = 0; i < materialInfo.materialList.length; i++) {
-    materialInfo.materials += materialInfo.materialList[i] + '\n'
+    materialInfo.materials += `${materialInfo.materialList[i]}\n`
   }
 }
 
@@ -156,7 +156,7 @@ const updateMaterial = () => {
 
 const stepInfo = reactive({
   newStep: '',
-  stepList: [] as Array<String>,
+  stepList: [] as String[],
   steps: ''
 })
 
@@ -230,8 +230,8 @@ const backToIndex = () => {
   }
 
   .back-button {
-    position: absolute;
-    top: 1%;
+    // position: absolute;
+    // top: 1%;
 
     display: flex;
     height: 3em;

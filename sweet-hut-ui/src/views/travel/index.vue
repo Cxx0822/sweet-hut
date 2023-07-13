@@ -204,7 +204,8 @@ const emptyAddTravelRecord: addTravelRecordIF = {
 const travelRecordInfo = reactive({
   selectYear: '',
   journalList: [],
-  imageBaseSrc: 'http://192.168.5.80:8080/downloads/travelJournal/',
+  imageBaseSrc: 'https://d428233v29.imdo.co/downloads/travelJournal/',
+  // imageBaseSrc: 'http://192.168.5.80:8080/downloads/travelJournal/',
   addTravelRecordDialogVisible: false,
   addTravelRecord: emptyAddTravelRecord,
   isShowAddImageButton: false,

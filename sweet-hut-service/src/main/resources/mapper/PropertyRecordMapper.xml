@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sweethut.service.mapper.PropertyRecordMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.sweethut.service.entity.PropertyRecord">
+        <result column="id" property="id"/>
+        <result column="date" property="date"/>
+        <result column="role" property="role"/>
+        <result column="type" property="type"/>
+        <result column="amount" property="amount"/>
+        <result column="remark" property="remark"/>
+    </resultMap>
+</mapper>

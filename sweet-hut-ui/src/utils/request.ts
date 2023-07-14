@@ -3,8 +3,8 @@ import { ElMessage } from 'element-plus'
 
 const service = axios.create({
   // URL地址
-  baseURL: 'https://d428233v29.imdo.co',
-  // baseURL: 'http://192.168.5.80:8080',
+  // baseURL: 'https://d428233v29.imdo.co',
+  baseURL: 'http://192.168.5.80:8080',
   // 连接时间
   timeout: 5000
 })

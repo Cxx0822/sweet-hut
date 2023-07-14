@@ -3,7 +3,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import Layout from '@/layout/index.vue'
 
 // path和name尽量不要重名，即使在不同的模块中
-export const constantRoutes: Array<any> = [
+export const constantRoutes: any[] = [
   {
     path: '/',
     component: Layout,
@@ -74,6 +74,22 @@ export const constantRoutes: Array<any> = [
         component: () => import('@/views/travel/plan.vue'),
         meta: {
           title: 'TravelPlan'
+        }
+      }
+    ]
+  },
+  {
+    path: '/property',
+    component: Layout,
+    redirect: '/property/list',
+    hidden: true,
+    children: [
+      {
+        path: '/property/list',
+        name: 'PropertyList',
+        component: () => import('@/views/property/index.vue'),
+        meta: {
+          title: 'PropertyList'
         }
       }
     ]

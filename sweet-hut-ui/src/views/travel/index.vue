@@ -1,5 +1,6 @@
 <template>
   <div class="travel-journal-container">
+    <h3>旅行日志</h3>
     <div class="title-container">
       <el-date-picker
           v-model="travelRecordInfo.selectYear"
@@ -334,6 +335,11 @@ const viewPlan = () => {
   justify-content: center;
   align-items: center;
   gap: 10px;
+
+  h3 {
+    padding: 0;
+    margin: 0;
+  }
 
   .title-container {
     display: flex;

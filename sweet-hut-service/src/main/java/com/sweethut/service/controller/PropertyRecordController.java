@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.sql.Wrapper;
 
 @RestController
 @RequestMapping("/propertyRecord")
@@ -33,6 +34,30 @@ public class PropertyRecordController {
             return R.ok().message("新增成功");
         }else {
             return R.error().message("新增失败");
+        }
+    }
+
+    @ApiOperation("更新资产记录")
+    @PostMapping("/updatePropertyRecord")
+    public R updatePropertyRecord(@RequestBody PropertyRecord propertyRecord) {
+        int update = propertyRecordMapper.updateById(propertyRecord);
+
+        if (update > 0) {
+            return R.ok().message("更新成功");
+        }else {
+            return R.error().message("更新失败");
+        }
+    }
+
+    @ApiOperation("删除资产记录")
+    @DeleteMapping("/deletePropertyRecord")
+    public R deletePropertyRecord(@RequestParam Integer id) {
+        int delete = propertyRecordMapper.deleteById(id);
+
+        if (delete > 0) {
+            return R.ok().message("更新成功");
+        }else {
+            return R.error().message("更新失败");
         }
     }
 }

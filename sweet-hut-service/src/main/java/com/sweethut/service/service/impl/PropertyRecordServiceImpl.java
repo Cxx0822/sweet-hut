@@ -21,13 +21,14 @@ public class PropertyRecordServiceImpl extends ServiceImpl<PropertyRecordMapper,
     @Override
     public List<PropertyRecordInfo> getAllPropertyRecordByYear(String year) {
         QueryWrapper<PropertyRecord> wrapper = new QueryWrapper<>();
-        wrapper.orderByDesc("date");
+        wrapper.orderByAsc("date");
 
         List<PropertyRecord> propertyRecordList = propertyRecordMapper.selectList(wrapper);
         List<String> yearFullMonth = DateUtil.getYearFullMonth(year);
 
         List<PropertyRecordInfo> propertyRecordInfoList = new ArrayList<>();
 
+        // 遍历指定年的月份
         for (int i = 0; i < yearFullMonth.size(); i++) {
             PropertyRecordInfo propertyRecordInfo = new PropertyRecordInfo();
             propertyRecordInfo.setId(i);
@@ -39,20 +40,24 @@ public class PropertyRecordServiceImpl extends ServiceImpl<PropertyRecordMapper,
             List<PropertyRecord> newPropertyRecordList = new ArrayList<>();
             int amount = 0;
 
+            // 遍历资产记录 如果月份和指定月份相等 则添加至children属性列表中
             for (PropertyRecord propertyRecord : propertyRecordList) {
                 if (DateUtil.isSameMonth(propertyRecord.getDate(), yearFullMonth.get(i))) {
+                    // 统计每月的收支
                     if (propertyRecord.getType().equals("收入")) {
                         amount += propertyRecord.getAmount();
-                    }else {
+                    } else {
                         amount -= propertyRecord.getAmount();
                     }
 
-                    propertyRecord.setId(propertyRecord.getId() + i * 12);
+                    // 设置children属性列表中的id
+                    propertyRecord.setId(propertyRecord.getId() + 100);
                     newPropertyRecordList.add(propertyRecord);
                 }
             }
 
             propertyRecordInfo.setAmount(amount);
+            // 设置每月的children属性
             propertyRecordInfo.setChildren(newPropertyRecordList);
 
             propertyRecordInfoList.add(propertyRecordInfo);

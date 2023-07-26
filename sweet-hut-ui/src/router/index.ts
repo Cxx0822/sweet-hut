@@ -91,6 +91,14 @@ export const constantRoutes: any[] = [
         meta: {
           title: 'PropertyList'
         }
+      },
+      {
+        path: '/property/plan',
+        name: 'PropertyPlan',
+        component: () => import('@/views/property/plan.vue'),
+        meta: {
+          title: 'PropertyPlan'
+        }
       }
     ]
   }

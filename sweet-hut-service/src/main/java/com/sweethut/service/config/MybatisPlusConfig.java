@@ -18,6 +18,11 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 
+/**
+ * @Author: Cxx
+ * @Date: 2023/7/24 20:42
+ * @Description: Mybatis Plus配置类
+ */
 @Configuration
 @EnableTransactionManagement
 @MapperScan("com.sweethut.service.mapper")

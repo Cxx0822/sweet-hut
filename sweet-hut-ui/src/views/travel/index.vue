@@ -16,13 +16,15 @@
         <el-button :icon="Checked" circle @click="router.push('/travel/plan')"></el-button>
       </el-tooltip>
 
-      <el-tooltip effect="dark" content="旅游景点统计" placement="bottom">
+      <el-tooltip effect="dark" content="旅游记录统计" placement="bottom">
         <el-button :icon="Histogram" circle></el-button>
       </el-tooltip>
     </div>
 
     <div class="travel-item-container" >
-      <el-card shadow="always" v-for="(journal, index) in travelRecordInfo.journalList" :key="index">
+      <el-card shadow="always"
+               v-for="(journal, index) in travelRecordInfo.journalList"
+               :key="index">
         <h3 style="text-align: center;margin: 0">{{ journal.title }}</h3>
 
         <el-descriptions
@@ -102,7 +104,9 @@
         v-model="travelRecordInfo.addTravelRecordDialogVisible"
         title="新增旅游景点"
         draggable center>
-      <el-form ref="addTravelRecordFormRef" :model="travelRecordInfo.addTravelRecord" :rules="addTravelRecordRules">
+      <el-form ref="addTravelRecordFormRef"
+               :model="travelRecordInfo.addTravelRecord"
+               :rules="addTravelRecordRules">
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="标题" prop="title">
@@ -167,7 +171,8 @@
       </el-form>
       <template #footer>
       <span class="dialog-footer">
-        <el-button type="primary" @click="submitTravelRecordClick(addTravelRecordFormRef)">新增</el-button>
+        <el-button type="primary"
+                   @click="submitTravelRecordClick(addTravelRecordFormRef)">新增</el-button>
         <el-button @click="travelRecordInfo.addTravelRecordDialogVisible = false">取消</el-button>
       </span>
       </template>

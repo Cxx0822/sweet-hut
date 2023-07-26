@@ -6,22 +6,19 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
+import lombok.Data;
 
-import java.io.Serializable;
 import java.util.Date;
 
-
-@Getter
-@Setter
-@Accessors(chain = true)
+/**
+ * @Author: Cxx
+ * @Date: 2023/7/24 20:42
+ * @Description: 旅行记录实体类
+ */
+@Data
 @TableName("travel_record")
 @ApiModel(value = "travel_record对象", description = "")
-public class TravelRecord implements Serializable {
-    private static final long serialVersionUID = 1L;
-
+public class TravelRecord {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 

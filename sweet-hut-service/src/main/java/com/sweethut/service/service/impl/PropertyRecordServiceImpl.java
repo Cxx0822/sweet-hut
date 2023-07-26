@@ -13,6 +13,11 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @Author: Cxx
+ * @Date: 2023/7/24 20:42
+ * @Description: 资产记录Service实现类
+ */
 @Service
 public class PropertyRecordServiceImpl extends ServiceImpl<PropertyRecordMapper, PropertyRecord> implements PropertyRecordService {
     @Resource
@@ -44,7 +49,7 @@ public class PropertyRecordServiceImpl extends ServiceImpl<PropertyRecordMapper,
             for (PropertyRecord propertyRecord : propertyRecordList) {
                 if (DateUtil.isSameMonth(propertyRecord.getDate(), yearFullMonth.get(i))) {
                     // 统计每月的收支
-                    if (propertyRecord.getType().equals("收入")) {
+                    if ("收入".equals(propertyRecord.getType())) {
                         amount += propertyRecord.getAmount();
                     } else {
                         amount -= propertyRecord.getAmount();

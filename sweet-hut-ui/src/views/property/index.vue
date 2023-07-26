@@ -14,6 +14,12 @@
           <el-icon><CirclePlus /></el-icon>
         </el-button>
       </el-tooltip>
+
+      <el-tooltip effect="dark" content="存钱计划" placement="bottom">
+        <el-button circle @click="router.push('/property/plan')">
+          <el-icon><Checked /></el-icon>
+        </el-button>
+      </el-tooltip>
     </div>
 
     <el-table
@@ -110,7 +116,7 @@
 
 <script lang="ts" setup>
 import { ref, reactive, onMounted } from 'vue'
-import { CirclePlus } from '@element-plus/icons-vue'
+import { Checked, CirclePlus } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox, FormInstance, FormRules } from 'element-plus'
 import {
   addPropertyRecord,
@@ -118,6 +124,9 @@ import {
   getAllPropertyRecordByYear,
   updatePropertyRecord
 } from '@/api/propertyRecord'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 interface propertyRecordIF {
   id?: number;

@@ -6,21 +6,13 @@ import Layout from '@/layout/index.vue'
 export const constantRoutes: any[] = [
   {
     path: '/',
-    component: Layout,
-    redirect: '/home',
-    hidden: true,
-    // children子路由需要在父路由中占位才能显示
-    // 即 <router-view />
-    children: [
-      {
-        path: 'home',
-        name: 'Home',
-        component: () => import('@/views/home/index.vue'),
-        meta: {
-          title: 'Home'
-        }
-      }
-    ]
+    redirect: '/home'
+  },
+  // 主页
+  {
+    path: '/home',
+    component: () => import('@/views/home/index.vue'),
+    hidden: true
   },
   {
     path: '/cookery-book',
